@@ -371,6 +371,22 @@ ul { list-style: none; padding: 0; }
   content: ""; position: absolute; inset: 0;
   background: radial-gradient(60% 50% at 70% 40%, rgba(255, 107, 26, 0.18), transparent 70%);
 }
+/* Phones & tablets: photo gets its own space at the top (face fully visible),
+   text starts over its faded lower edge; hero logo hidden (it's in the navbar) */
+@media (max-width: 899px) {
+  .hero { place-items: start center; align-content: start; padding-top: var(--nav-h); }
+  .hero__photo {
+    position: relative; inset: auto; z-index: 0;
+    width: calc(100% + 2 * var(--gutter)); margin: 0 calc(-1 * var(--gutter));
+    height: min(64svh, 118vw); opacity: 1;
+    -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
+  }
+  .hero__photo img { object-position: 42% 6%; }
+  .hero__content { margin-top: calc(-1 * min(15svh, 26vw)); }
+  .hero__logo-wrap { display: none; }
+}
+
 /* Static fallback embers (no WebGL / reduced motion) */
 .hero--static .hero__canvas, .no-js .hero__canvas { display: none; }
 .hero--static .hero__fire, .no-js .hero__fire {
