@@ -180,44 +180,134 @@ export function initCountdown({ startISO, reduced }) {
   tick();
 }
 
-/* ---------- Mini music player (decorative) ---------- */
-export function initPlayer({ tracks, reduced }) {
+/* ---------- Mini music player ----------
+   Real playback when tracks in config have a `src` (audio file in /public/audio/).
+   Without any `src`, it falls back to a decorative animation. */
+export function initPlayer({ tracks: rawTracks, reduced }) {
   const player = $('#player');
   if (!player) return;
   const fill = $('#playerFill'), now = $('#playerNow'), dur = $('#playerDur'), title = $('#playerTrack');
-  const durations = [225, 198, 172, 214];
-  let i = 0, elapsed = 42, playing = !reduced;
-  const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
-  const length = () => durations[i % durations.length];
-  const render = () => {
-    fill.style.width = `${(elapsed / length()) * 100}%`;
-    now.textContent = fmt(elapsed);
-    dur.textContent = fmt(length());
-    title.textContent = tracks[i];
+  const bar = $('.player__bar', player), playBtn = $('#playerPlay');
+  const fmt = (s) => (Number.isFinite(s) ? `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}` : '0:00');
+  const all = rawTracks.map((t) => (typeof t === 'string' ? { title: t } : t));
+  const playable = all.filter((t) => t.src);
+  const setPlayingUI = (on) => {
+    player.classList.toggle('is-paused', !on);
+    playBtn.setAttribute('aria-label', `${on ? 'Pause' : 'Play'} ${title.textContent}`);
   };
-  const go = (step) => {
-    i = (i + step + tracks.length) % tracks.length;
-    elapsed = 0;
-    fill.style.transition = 'none';
+
+  /* ----- Decorative mode (no audio files yet) ----- */
+  if (!playable.length) {
+    const durations = [225, 198, 172, 214];
+    let i = 0, elapsed = 42, playing = !reduced;
+    const length = () => durations[i % durations.length];
+    const render = () => {
+      fill.style.width = `${(elapsed / length()) * 100}%`;
+      now.textContent = fmt(elapsed);
+      dur.textContent = fmt(length());
+      title.textContent = all[i].title;
+    };
+    const go = (step) => {
+      i = (i + step + all.length) % all.length;
+      elapsed = 0;
+      fill.style.transition = 'none';
+      render();
+      void fill.offsetWidth;
+      fill.style.transition = '';
+    };
     render();
-    void fill.offsetWidth;
-    fill.style.transition = '';
+    setPlayingUI(playing);
+    setInterval(() => {
+      if (!playing || document.hidden) return;
+      elapsed += 1;
+      if (elapsed > length()) go(1); else render();
+    }, 1000);
+    playBtn.addEventListener('click', () => { playing = !playing; setPlayingUI(playing); });
+    $('#playerPrev').addEventListener('click', () => go(-1));
+    $('#playerNext').addEventListener('click', () => go(1));
+    return;
+  }
+
+  /* ----- Audio mode ----- */
+  const audio = new Audio();
+  audio.preload = 'none'; // nothing downloads until the visitor presses play
+  let i = 0;
+  player.classList.add('is-audio');
+  fill.style.transition = 'none';
+
+  // Progress bar becomes a keyboard/touch-accessible seek slider
+  bar.removeAttribute('aria-hidden');
+  Object.entries({ role: 'slider', tabindex: '0', 'aria-label': 'Seek', 'aria-valuemin': '0', 'aria-valuemax': '100', 'aria-valuenow': '0' })
+    .forEach(([k, v]) => bar.setAttribute(k, v));
+
+  const render = () => {
+    const d = audio.duration;
+    const pct = d ? (audio.currentTime / d) * 100 : 0;
+    fill.style.width = `${pct}%`;
+    now.textContent = fmt(audio.currentTime);
+    dur.textContent = d ? fmt(d) : (playable[i].duration || '--:--');
+    bar.setAttribute('aria-valuenow', String(Math.round(pct)));
+    bar.setAttribute('aria-valuetext', `${fmt(audio.currentTime)} of ${fmt(d)}`);
   };
-  player.classList.toggle('is-paused', !playing);
-  $('#playerPlay').setAttribute('aria-label', playing ? 'Pause' : 'Play');
-  render();
-  setInterval(() => {
-    if (!playing || document.hidden) return;
-    elapsed += 1;
-    if (elapsed > length()) go(1); else render();
-  }, 1000);
-  $('#playerPlay').addEventListener('click', (e) => {
-    playing = !playing;
-    player.classList.toggle('is-paused', !playing);
-    e.currentTarget.setAttribute('aria-label', playing ? 'Pause' : 'Play');
+  const load = (idx, autoplay) => {
+    i = (idx + playable.length) % playable.length;
+    const t = playable[i];
+    audio.src = t.src;
+    title.textContent = t.title;
+    render();
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: t.title,
+        artist: 'Hasan Raheem',
+        album: 'LMDC Mela 2026',
+        artwork: [{ src: '/icon-512.png', sizes: '512x512', type: 'image/png' }],
+      });
+    }
+    if (autoplay) audio.play().catch(() => setPlayingUI(false));
+    else setPlayingUI(false);
+  };
+  const toggle = () => (audio.paused ? audio.play().catch(() => setPlayingUI(false)) : audio.pause());
+  const prev = () => (audio.currentTime > 3 ? (audio.currentTime = 0) : load(i - 1, !audio.paused));
+  const next = () => load(i + 1, !audio.paused || audio.ended);
+
+  audio.addEventListener('play', () => setPlayingUI(true));
+  audio.addEventListener('pause', () => setPlayingUI(false));
+  audio.addEventListener('timeupdate', render);
+  audio.addEventListener('loadedmetadata', render);
+  audio.addEventListener('ended', () => load(i + 1, true)); // auto-advance through the playlist
+  audio.addEventListener('error', () => { title.textContent = `${playable[i].title} (unavailable)`; setPlayingUI(false); });
+
+  playBtn.addEventListener('click', toggle);
+  $('#playerPrev').addEventListener('click', prev);
+  $('#playerNext').addEventListener('click', next);
+
+  const seekTo = (clientX) => {
+    if (!audio.duration) return;
+    const r = bar.getBoundingClientRect();
+    audio.currentTime = Math.max(0, Math.min(1, (clientX - r.left) / r.width)) * audio.duration;
+  };
+  bar.addEventListener('pointerdown', (e) => {
+    seekTo(e.clientX);
+    bar.setPointerCapture(e.pointerId);
+    const move = (ev) => seekTo(ev.clientX);
+    bar.addEventListener('pointermove', move);
+    bar.addEventListener('pointerup', () => bar.removeEventListener('pointermove', move), { once: true });
   });
-  $('#playerPrev').addEventListener('click', () => go(-1));
-  $('#playerNext').addEventListener('click', () => go(1));
+  bar.addEventListener('keydown', (e) => {
+    if (!audio.duration) return;
+    const step = { ArrowRight: 5, ArrowUp: 5, ArrowLeft: -5, ArrowDown: -5 }[e.key];
+    if (step) { e.preventDefault(); audio.currentTime = Math.max(0, Math.min(audio.duration, audio.currentTime + step)); }
+  });
+
+  // Lock-screen / headphone controls on phones
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.setActionHandler('play', () => audio.play());
+    navigator.mediaSession.setActionHandler('pause', () => audio.pause());
+    navigator.mediaSession.setActionHandler('previoustrack', prev);
+    navigator.mediaSession.setActionHandler('nexttrack', next);
+  }
+
+  load(0, false);
 }
 
 /* ---------- 3D tilt (poster + cards), mouse and touch ---------- */
