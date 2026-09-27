@@ -1,8 +1,8 @@
 {
   "logo": {
-    "width": 1280,
-    "height": 1600,
-    "fallback": "/logo.png",
+    "width": 1205,
+    "height": 832,
+    "fallback": "/img/logo.png",
     "variants": [
       {
         "w": 128,

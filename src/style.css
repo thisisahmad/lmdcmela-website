@@ -234,7 +234,7 @@ ul { list-style: none; padding: 0; }
 }
 .loader__logo {
   position: relative;
-  width: clamp(140px, 38vw, 220px); height: auto;
+  width: clamp(200px, 60vw, 320px); height: auto;
   opacity: 1;
   filter: brightness(0.6) saturate(0.6);
   transition: opacity 0.5s ease, transform 0.8s var(--ease), filter 0.4s ease;
@@ -285,7 +285,7 @@ ul { list-style: none; padding: 0; }
   box-shadow: 0 0 0 1px rgba(255, 166, 48, 0.35), 0 0 18px -4px rgba(255, 107, 26, 0.7);
   display: grid; place-items: center;
 }
-.nav__badge img { width: 40px; height: 40px; object-fit: contain; }
+.nav__badge img { width: 36px; height: 36px; object-fit: contain; }
 .no-js .nav__burger { display: none; }
 .nav__word { font: 800 1rem/1 var(--f-display); letter-spacing: 0.08em; text-transform: uppercase; }
 .nav__word em { font-style: normal; color: var(--orange); }
@@ -392,7 +392,7 @@ ul { list-style: none; padding: 0; }
 }
 .hero__logo {
   position: relative;
-  width: clamp(110px, 26vw, 170px); height: auto;
+  width: clamp(150px, 40vw, 240px); height: auto;
   animation: float 6s ease-in-out infinite, logoPulse 3.2s ease-in-out infinite;
 }
 @keyframes float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -10px; } }
@@ -828,7 +828,7 @@ ul { list-style: none; padding: 0; }
 @keyframes marquee { to { transform: translateX(-50%); } }
 
 .footer__inner { display: flex; flex-direction: column; align-items: center; gap: 1.2rem; padding: 3.5rem var(--gutter) 2.5rem; text-align: center; }
-.footer__logo { width: 110px; height: auto; }
+.footer__logo { width: 150px; height: auto; }
 .footer__ig { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; letter-spacing: 0.05em; color: var(--text); transition: color 0.3s; }
 .footer__ig:hover { color: var(--orange); }
 .footer__ig svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; }
@@ -939,7 +939,7 @@ ul { list-style: none; padding: 0; }
   padding: 3rem var(--gutter);
   background: radial-gradient(70% 45% at 50% 105%, rgba(230, 58, 18, 0.45), transparent 70%), var(--bg);
 }
-.notfound__logo { width: 130px; height: auto; margin-bottom: 0.5rem; animation: float 6s ease-in-out infinite; }
+.notfound__logo { width: 180px; height: auto; margin-bottom: 0.5rem; animation: float 6s ease-in-out infinite; }
 .notfound__code {
   font: 400 clamp(6rem, 30vw, 14rem)/0.9 var(--f-artist);
   background: var(--fire-grad); -webkit-background-clip: text; background-clip: text; color: transparent;

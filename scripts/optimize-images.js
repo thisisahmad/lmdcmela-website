@@ -19,7 +19,8 @@ const OUT = path.join(PUBLIC, 'img');
 const MANIFEST = path.join(ROOT, 'src', 'generated', 'images.json');
 
 const SOURCES = {
-  logo: { file: 'logo.png', widths: [128, 256, 512], quality: 82 },
+  // `trim`: crop the empty black border so the phoenix fills its box (the file itself is untouched)
+  logo: { file: 'logo.png', widths: [128, 256, 512], quality: 82, trim: true },
   poster: { file: 'hero-poster.png', widths: [480, 768, 1080, 1440], quality: 78 },
 };
 
@@ -60,19 +61,34 @@ async function main() {
       console.warn(`⚠  ${cfg.file} not found in /public — skipping (plain <img> fallback will be used).`);
       continue;
     }
-    const meta = await sharp(src).metadata();
     const base = path.basename(cfg.file, '.png');
+    // Work from a normalised copy: trimmed (logo) and always a real PNG, whatever the source format
+    let input = src;
+    let fallback = `/${cfg.file}`;
+    if (cfg.trim) {
+      const { data } = await sharp(src).trim({ threshold: 20 }).png().toBuffer({ resolveWithObject: true });
+      const t = await sharp(data).metadata();
+      const pad = Math.round(Math.max(t.width, t.height) * 0.04);
+      input = await sharp(data).extend({ top: pad, bottom: pad, left: pad, right: pad, background: '#000' }).png().toBuffer();
+      const fbOut = path.join(OUT, `${base}.png`);
+      if (force || mtime(fbOut) < mtime(src)) {
+        await sharp(input).resize({ width: Math.max(...cfg.widths), withoutEnlargement: true }).png({ compressionLevel: 9 }).toFile(fbOut);
+        console.log(`✓  img/${base}.png (trimmed fallback)`);
+      }
+      fallback = `/img/${base}.png`;
+    }
+    const meta = await sharp(input).metadata();
     const widths = cfg.widths.filter((w) => w <= meta.width).concat(meta.width < Math.max(...cfg.widths) ? [meta.width] : []);
     const variants = [];
     for (const w of [...new Set(widths)]) {
       const out = path.join(OUT, `${base}-${w}.webp`);
       if (force || mtime(out) < mtime(src)) {
-        await sharp(src).resize({ width: w }).webp({ quality: cfg.quality, effort: 5 }).toFile(out);
+        await sharp(input).resize({ width: w }).webp({ quality: cfg.quality, effort: 5 }).toFile(out);
         console.log(`✓  img/${path.basename(out)}`);
       }
       variants.push({ w, file: `/img/${base}-${w}.webp` });
     }
-    manifest[key] = { width: meta.width, height: meta.height, fallback: `/${cfg.file}`, variants };
+    manifest[key] = { width: meta.width, height: meta.height, fallback, variants };
   }
 
   // Favicons from the logo — trimmed so the phoenix fills the icon, on black.
