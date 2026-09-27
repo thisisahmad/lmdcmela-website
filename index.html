@@ -214,7 +214,13 @@
           <blockquote class="headliner__tagline" data-reveal>“{{headliner.tagline}}”</blockquote>
           <p class="headliner__bio" data-reveal>{{{headliner.bio}}}</p>
           <ul class="hits" data-reveal aria-label="Hit songs"><!--render:hits--></ul>
-          <a class="btn-fire" href="{{links.tickets}}" target="_blank" rel="noopener" data-reveal>Get Tickets</a>
+          <div class="headliner__actions" data-reveal>
+            <a class="btn-fire" href="{{links.tickets}}" target="_blank" rel="noopener">Get Tickets</a>
+            <a class="btn-ghost" href="{{links.spotifyArtist}}" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="M7 9.5c3.5-1 7.5-.6 10.5 1M7.5 12.8c3-.8 6.2-.4 8.7.9M8 16c2.4-.6 4.8-.3 6.8.7" /></svg>
+              Listen on Spotify
+            </a>
+          </div>
         </div>
       </div>
     </section>

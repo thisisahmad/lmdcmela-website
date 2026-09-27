@@ -449,6 +449,22 @@ ul { list-style: none; padding: 0; }
 .player__track { font: 700 0.95rem/1.2 var(--f-display); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .player__artist { font-size: 0.72rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .player__bar { position: relative; height: 4px; margin-top: 0.55rem; border-radius: 4px; background: rgba(255, 255, 255, 0.12); overflow: visible; }
+/* Spotify mode: the official embed opens under the controls on first play */
+.player__embed {
+  grid-column: 1 / -1;
+  height: 0; overflow: hidden; border-radius: 12px;
+  transition: height 0.5s var(--ease), margin 0.5s var(--ease);
+}
+.player.is-embed-open .player__embed { height: 80px; margin-top: 0.2rem; }
+.player__embed iframe { display: block; width: 100%; height: 80px; border: 0; }
+.player__note { grid-column: 1 / -1; margin: 0; font-size: 0.68rem; color: var(--muted); text-align: center; }
+.player__note a { color: var(--amber); }
+.player.is-spotify .player__bar { cursor: pointer; }
+/* Waiting for Spotify to start: pulsing play button instead of a misleading pause icon */
+.player.is-buffering .player__btn--main { animation: bufferPulse 1s ease-in-out infinite; }
+.player.is-buffering .player__btn--main .i-pause { display: none; }
+.player.is-buffering .player__btn--main .i-play { display: block; opacity: 0.55; }
+@keyframes bufferPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255, 107, 26, 0.6); } 50% { box-shadow: 0 0 0 10px rgba(255, 107, 26, 0); } }
 .player.is-audio .player__bar { cursor: pointer; height: 5px; touch-action: none; }
 .player.is-audio .player__bar::before { content: ""; position: absolute; inset: -10px 0; } /* bigger touch target */
 .player.is-audio .player__bar:hover .player__fill::after,
@@ -585,6 +601,7 @@ ul { list-style: none; padding: 0; }
   margin-bottom: 1.4rem;
 }
 .headliner__bio { color: var(--muted); margin-bottom: 1.6rem; max-width: 56ch; }
+.headliner__actions { display: flex; flex-wrap: wrap; gap: 0.8rem; }
 .hits { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 2.2rem; }
 .hits li {
   padding: 0.5em 1.1em; border-radius: 999px;

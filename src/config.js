@@ -47,6 +47,7 @@ const config = {
     tickets: TICKET_URL,
     instagram: INSTAGRAM_URL,
     instagramHandle: '@lmdcmela',
+    spotifyArtist: 'https://open.spotify.com/artist/6gIqKYKRmltKfkTnxhMv8V', // Hasan Raheem
   },
 
   headliner: {
@@ -121,17 +122,18 @@ const config = {
 
   marquee: 'LMDC MELA • HASAN RAHEEM • 18 OCT 2026 • KHAYABAN-E-AMIN •',
 
-  // Hero mini-player playlist.
-  // To make it really play: put MP3 files in /public/audio/ and set `src` for each song,
-  // e.g. src: '/audio/joona.mp3'. Only upload songs you have permission to use
-  // (ask the artist's management). Once any song has a `src`, songs without one are skipped;
-  // if none have a `src`, the player stays a decorative animation.
-  // `duration` is optional — shown before the file loads (e.g. '3:45').
+  // Hero mini-player playlist — plays through the official Spotify embed.
+  // `spotify`: the track's Spotify URI. To get it: open the song on Spotify →
+  //   Share → Copy Song Link → take the ID after /track/ → 'spotify:track:<ID>'.
+  // Visitors logged in to Spotify hear full songs; everyone else hears 30-second previews.
+  // (Advanced: `src: '/audio/file.mp3'` plays a self-hosted file instead — only for
+  //  songs you hold a licence for. Audio files are git-ignored so they never reach GitHub.)
   playerTracks: [
-    { title: 'Joona', src: null },
-    { title: 'Aarzu', src: null },
-    { title: 'Peechay Hutt', src: null },
-    { title: 'Sun Le Na', src: null },
+    { title: 'Joona', spotify: 'spotify:track:18twglRl0wFIIMtFOy2CHs' },
+    { title: 'Aarzu', spotify: 'spotify:track:0VRTOe8RLdpE2Pl557PCno' },
+    { title: 'Peechay Hutt', spotify: 'spotify:track:5eOGj0N367J6ORDBaQ5zlR' },
+    { title: 'Sun Le Na', spotify: 'spotify:track:0tyK2eyMatZvNCVtbdNlmt' },
+    { title: 'Rangeen', spotify: 'spotify:track:7cO7GWk6vUGNcAUXMJ2Bdj' },
   ],
 };
 

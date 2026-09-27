@@ -181,8 +181,8 @@ export function initCountdown({ startISO, reduced }) {
 }
 
 /* ---------- Mini music player ----------
-   Real playback when tracks in config have a `src` (audio file in /public/audio/).
-   Without any `src`, it falls back to a decorative animation. */
+   Priority: self-hosted `src` files → official Spotify embed (`spotify` URIs) →
+   decorative animation when neither is configured. */
 export function initPlayer({ tracks: rawTracks, reduced }) {
   const player = $('#player');
   if (!player) return;
@@ -191,13 +191,14 @@ export function initPlayer({ tracks: rawTracks, reduced }) {
   const fmt = (s) => (Number.isFinite(s) ? `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}` : '0:00');
   const all = rawTracks.map((t) => (typeof t === 'string' ? { title: t } : t));
   const playable = all.filter((t) => t.src);
+  const spotifyTracks = all.filter((t) => t.spotify);
   const setPlayingUI = (on) => {
     player.classList.toggle('is-paused', !on);
     playBtn.setAttribute('aria-label', `${on ? 'Pause' : 'Play'} ${title.textContent}`);
   };
 
-  /* ----- Decorative mode (no audio files yet) ----- */
-  if (!playable.length) {
+  /* ----- Decorative mode (nothing to play) ----- */
+  if (!playable.length && !spotifyTracks.length) {
     const durations = [225, 198, 172, 214];
     let i = 0, elapsed = 42, playing = !reduced;
     const length = () => durations[i % durations.length];
@@ -227,6 +228,9 @@ export function initPlayer({ tracks: rawTracks, reduced }) {
     $('#playerNext').addEventListener('click', () => go(1));
     return;
   }
+
+  /* ----- Spotify mode ----- */
+  if (!playable.length) return initSpotifyPlayer({ player, tracks: spotifyTracks, fill, now, dur, title, bar, playBtn, fmt, setPlayingUI });
 
   /* ----- Audio mode ----- */
   const audio = new Audio();
@@ -308,6 +312,168 @@ export function initPlayer({ tracks: rawTracks, reduced }) {
   }
 
   load(0, false);
+}
+
+/* Spotify iFrame API — https://developer.spotify.com/documentation/embeds/references/iframe-api
+   Our buttons drive the official embed, which opens (visible, as Spotify requires)
+   under the controls on first play. The API script only loads when play is pressed. */
+function initSpotifyPlayer({ player, tracks, fill, now, dur, title, bar, playBtn, fmt, setPlayingUI }) {
+  let i = 0;
+  let controller = null;
+  let loading = false;
+  let wantPlaying = false; // what the visitor asked for
+  let state = { position: 0, duration: 0, isPaused: true };
+  let retryTimer = 0;
+  let pausedAt = 0; // when the visitor last pressed pause
+  let endedUri = ''; // guards against advancing twice for the same song
+
+  player.classList.add('is-spotify');
+  const embed = document.createElement('div');
+  embed.className = 'player__embed';
+  const mount = document.createElement('div');
+  embed.append(mount);
+  const note = document.createElement('p');
+  note.className = 'player__note';
+  note.hidden = true;
+  note.innerHTML = 'Full songs when logged in to <a href="https://open.spotify.com" target="_blank" rel="noopener">Spotify</a> · 30-sec previews otherwise';
+  player.append(embed, note);
+
+  bar.removeAttribute('aria-hidden');
+  Object.entries({ role: 'slider', tabindex: '0', 'aria-label': 'Seek', 'aria-valuemin': '0', 'aria-valuemax': '100', 'aria-valuenow': '0' })
+    .forEach(([k, v]) => bar.setAttribute(k, v));
+
+  const uri = () => tracks[i].spotify;
+  const setBuffering = (on) => player.classList.toggle('is-buffering', on);
+
+  // Warm up the connection to Spotify as soon as the visitor shows interest
+  const warm = () => {
+    ['https://open.spotify.com', 'https://embed-cdn.spotifycdn.com', 'https://p.scdn.co'].forEach((href) => {
+      const l = document.createElement('link');
+      l.rel = 'preconnect'; l.href = href; l.crossOrigin = '';
+      document.head.append(l);
+    });
+  };
+  ['pointerenter', 'touchstart', 'focusin'].forEach((ev) => player.addEventListener(ev, warm, { once: true, passive: true }));
+  const render = () => {
+    const pct = state.duration ? (state.position / state.duration) * 100 : 0;
+    fill.style.width = `${Math.min(100, pct)}%`;
+    now.textContent = fmt(state.position / 1000);
+    dur.textContent = state.duration ? fmt(state.duration / 1000) : '--:--';
+    bar.setAttribute('aria-valuenow', String(Math.round(pct)));
+  };
+  const show = (idx) => {
+    i = (idx + tracks.length) % tracks.length;
+    title.textContent = tracks[i].title;
+    state = { position: 0, duration: 0, isPaused: true };
+    render();
+  };
+
+  /* The embed can ignore commands sent while it is still starting up, so keep
+     asking (resume() is safe to repeat) until Spotify reports playback, max ~30 s
+     (slow mobile connections can take a while to load the embed). */
+  const play = () => {
+    wantPlaying = true;
+    setPlayingUI(true);
+    if (state.isPaused) setBuffering(true);
+    clearInterval(retryTimer);
+    if (!controller) return;
+    let tries = 0;
+    const attempt = () => {
+      if (!wantPlaying || !state.isPaused) return clearInterval(retryTimer);
+      if (++tries > 42) { clearInterval(retryTimer); wantPlaying = false; setPlayingUI(false); setBuffering(false); return; }
+      controller.resume();
+    };
+    attempt();
+    retryTimer = setInterval(attempt, 700);
+  };
+  const pause = () => {
+    wantPlaying = false;
+    setBuffering(false);
+    pausedAt = Date.now();
+    clearInterval(retryTimer);
+    controller?.pause();
+    setPlayingUI(false);
+  };
+
+  const onUpdate = ({ data }) => {
+    if (data.playingURI && data.playingURI !== uri()) return; // stale update from the previous song
+    const prev = state;
+    state = { position: data.position, duration: data.duration, isPaused: data.isPaused };
+    render();
+    if (!data.isPaused) { clearInterval(retryTimer); setBuffering(false); }
+    // Song finished (full track or 30-s preview): it reached the end, or stopped right at the end
+    const atEnd = data.duration && data.position >= data.duration - 500;
+    const stoppedAtEnd = data.isPaused && !prev.isPaused && prev.duration && prev.position >= prev.duration - 2500;
+    const ended = atEnd || stoppedAtEnd;
+    if (ended && wantPlaying && endedUri !== uri()) { endedUri = uri(); return go(1, true); }
+    // Paused from Spotify's own button (or the OS media controls) — follow it
+    if (data.isPaused && !prev.isPaused && !ended) { wantPlaying = false; clearInterval(retryTimer); }
+    if (!data.isPaused && !wantPlaying) {
+      // A retry that was already in flight started playback right after the visitor paused → undo it.
+      // Otherwise playback was started from Spotify's own button → follow it.
+      if (Date.now() - pausedAt < 4000) controller.pause(); else wantPlaying = true;
+    }
+    setPlayingUI(!data.isPaused || wantPlaying);
+  };
+
+  const createController = (IFrameAPI) => {
+    IFrameAPI.createController(mount, { uri: uri(), width: '100%', height: 80 }, (ctrl) => {
+      controller = ctrl;
+      loading = false;
+      ctrl.addListener('playback_update', onUpdate);
+      ctrl.addListener('ready', () => { if (wantPlaying && state.isPaused) play(); });
+      if (wantPlaying) setTimeout(play, 300); // 'ready' may already have fired
+    });
+  };
+
+  const open = () => {
+    if (controller || loading) return;
+    loading = true;
+    player.classList.add('is-embed-open');
+    note.hidden = false;
+    if (window.SpotifyIframeApi) return createController(window.SpotifyIframeApi);
+    window.onSpotifyIframeApiReady = (IFrameAPI) => { window.SpotifyIframeApi = IFrameAPI; createController(IFrameAPI); };
+    const script = document.createElement('script');
+    script.src = 'https://open.spotify.com/embed/iframe-api/v1';
+    script.async = true;
+    script.onerror = () => { loading = false; wantPlaying = false; setPlayingUI(false); setBuffering(false); note.textContent = 'Spotify could not load — check your connection.'; };
+    document.head.append(script);
+  };
+
+  const go = (step, autoplay) => {
+    clearInterval(retryTimer);
+    show(i + step);
+    if (!controller) return;
+    endedUri = '';
+    controller.loadUri(uri());
+    if (autoplay) setTimeout(play, 400);
+    else { wantPlaying = false; setPlayingUI(false); }
+  };
+
+  playBtn.addEventListener('click', () => {
+    if (!controller) { wantPlaying = true; setPlayingUI(true); setBuffering(true); open(); return; }
+    if (wantPlaying) pause(); else play();
+  });
+  $('#playerPrev').addEventListener('click', () => {
+    if (controller && state.position > 3000) return controller.seek(0);
+    go(-1, wantPlaying);
+  });
+  $('#playerNext').addEventListener('click', () => go(1, wantPlaying));
+
+  const seekTo = (clientX) => {
+    if (!controller || !state.duration) return;
+    const r = bar.getBoundingClientRect();
+    controller.seek((Math.max(0, Math.min(1, (clientX - r.left) / r.width)) * state.duration) / 1000);
+  };
+  bar.addEventListener('click', (e) => seekTo(e.clientX));
+  bar.addEventListener('keydown', (e) => {
+    if (!controller || !state.duration) return;
+    const step = { ArrowRight: 5, ArrowUp: 5, ArrowLeft: -5, ArrowDown: -5 }[e.key];
+    if (step) { e.preventDefault(); controller.seek(Math.max(0, state.position / 1000 + step)); }
+  });
+
+  show(0);
+  setPlayingUI(false);
 }
 
 /* ---------- 3D tilt (poster + cards), mouse and touch ---------- */

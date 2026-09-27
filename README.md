@@ -25,6 +25,7 @@ Hosted on Vercel.
 | Media partners | `partners` |
 | Gallery photos | `gallery` |
 | Footer marquee text | `marquee` |
+| Hero music player songs | `playerTracks` (Spotify track URIs — see the comment there) |
 
 The text is written into the HTML at build time, so the page loads fast, ranks well and
 works even with JavaScript disabled. **You don't need to touch `index.html` to change content.**
