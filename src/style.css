@@ -371,9 +371,9 @@ ul { list-style: none; padding: 0; }
   content: ""; position: absolute; inset: 0;
   background: radial-gradient(60% 50% at 70% 40%, rgba(255, 107, 26, 0.18), transparent 70%);
 }
-/* Phones & tablets: photo gets its own space at the top (face fully visible),
+/* Phones, tablets and any tall screen: photo gets its own space at the top (face fully visible),
    text starts over its faded lower edge; hero logo hidden (it's in the navbar) */
-@media (max-width: 899px) {
+@media (max-width: 899px), (max-aspect-ratio: 1199/1000) {
   .hero { place-items: start center; align-content: start; padding-top: var(--nav-h); }
   .hero__photo {
     position: relative; inset: auto; z-index: 0;
@@ -937,31 +937,6 @@ ul { list-style: none; padding: 0; }
   body { padding-bottom: 0; }
   .fab { display: none; }
 
-  /* Hero: text left, photo right */
-  .hero {
-    place-items: center start;
-    padding: calc(var(--nav-h) + 1rem) var(--gutter) 4.5rem max(var(--gutter), calc((100vw - var(--max)) / 2));
-  }
-  .hero__content { align-items: flex-start; text-align: left; max-width: min(620px, 50vw); }
-  .hero__logo { width: clamp(120px, 10vw, 160px); }
-  .hero__title { align-items: flex-start; --title-size: clamp(3.6rem, 7.6vw, 8.4rem); }
-  .player { margin-left: 0; margin-right: 0; }
-  .hero__meta { justify-content: flex-start; }
-  /* Whole photo, sized to the hero's height and anchored bottom-right (nothing cropped).
-     The fade sits on the image itself, so its edges stay soft whatever its shape. */
-  .hero__photo {
-    inset: var(--nav-h) 0 0 auto; width: 52%; height: auto; opacity: 1;
-    display: flex; justify-content: flex-end; align-items: flex-end;
-    -webkit-mask-image: none; mask-image: none;
-  }
-  .hero__photo img {
-    width: auto; height: auto; max-width: 100%; max-height: 100%; /* keeps the photo's own proportions */
-    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 32%), linear-gradient(0deg, transparent 0%, #000 16%, #000 90%, transparent 100%);
-    -webkit-mask-composite: source-in;
-    mask-image: linear-gradient(90deg, transparent 0%, #000 32%), linear-gradient(0deg, transparent 0%, #000 16%, #000 90%, transparent 100%);
-    mask-composite: intersect;
-  }
-
   .headliner__grid { grid-template-columns: 1fr 1.1fr; }
   .headliner__media { max-width: none; }
   .headliner__title { font-size: clamp(3rem, 5.6vw, 5rem); }
@@ -990,6 +965,35 @@ ul { list-style: none; padding: 0; }
   }
   .ticket__admit { writing-mode: vertical-rl; transform: rotate(180deg); position: absolute; left: 1.6rem; top: 50%; translate: 0 -50%; padding: 0; }
   .ticket__stub { padding-left: 3.4rem; }
+}
+
+/* Side-by-side hero only on screens that are actually wide (landscape laptops/desktops).
+   Tall screens — tablets held upright, phones in "desktop site" mode — use the stacked layout. */
+@media (min-width: 900px) and (min-aspect-ratio: 6/5) {
+  /* Hero: text left, photo right */
+  .hero {
+    place-items: center start;
+    padding: calc(var(--nav-h) + 1rem) var(--gutter) 4.5rem max(var(--gutter), calc((100vw - var(--max)) / 2));
+  }
+  .hero__content { align-items: flex-start; text-align: left; max-width: min(620px, 50vw); }
+  .hero__logo { width: clamp(120px, 10vw, 160px); }
+  .hero__title { align-items: flex-start; --title-size: clamp(3.6rem, 7.6vw, 8.4rem); }
+  .player { margin-left: 0; margin-right: 0; }
+  .hero__meta { justify-content: flex-start; }
+  /* Whole photo, sized to the hero's height and anchored bottom-right (nothing cropped).
+     The fade sits on the image itself, so its edges stay soft whatever its shape. */
+  .hero__photo {
+    inset: var(--nav-h) 0 0 auto; width: 52%; height: auto; opacity: 1;
+    display: flex; justify-content: flex-end; align-items: flex-end;
+    -webkit-mask-image: none; mask-image: none;
+  }
+  .hero__photo img {
+    width: auto; height: auto; max-width: 100%; max-height: 100%; /* keeps the photo's own proportions */
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 32%), linear-gradient(0deg, transparent 0%, #000 16%, #000 90%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(90deg, transparent 0%, #000 32%), linear-gradient(0deg, transparent 0%, #000 16%, #000 90%, transparent 100%);
+    mask-composite: intersect;
+  }
 }
 
 /* Large monitors: scale hero text and player with the screen */
