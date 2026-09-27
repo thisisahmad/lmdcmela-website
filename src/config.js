@@ -106,7 +106,7 @@ const config = {
   // Put logo files in /public/images/partners/. Set `logo: null` to show the name as styled text.
   partners: [
     { name: 'Howl Crew Media', logo: '/images/partners/howl-crew-media.svg' },
-    { name: 'MediaSnifters', logo: '/images/partners/mediasnifters.svg' },
+    { name: 'Media Sniffers', logo: '/images/partners/media-sniffers.svg' },
   ],
 
   // Put photos in /public/images/gallery/ (portrait ~800×1000, JPG/WebP, < 250 KB).
