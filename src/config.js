@@ -112,7 +112,6 @@ const config = {
   // Put photos in /public/images/gallery/ (portrait ~800×1000, JPG/WebP, < 250 KB).
   // Tip: when replacing a photo, give it a NEW file name — images are cached for a year.
   gallery: [
-    { src: '/images/gallery/hasan-raheem-live.webp', alt: 'Hasan Raheem singing live on stage', caption: 'Live on Stage' },
     { src: '/images/gallery/hasan-raheem-smile.webp', alt: 'Hasan Raheem smiling on stage, hand on his heart', caption: 'All Heart' },
     { src: '/images/gallery/hasan-raheem-red.webp', alt: 'Hasan Raheem seated on a wooden chair against a red backdrop', caption: 'Red Room' },
     { src: '/images/gallery/hasan-raheem-mono.webp', alt: 'Black and white photo of Hasan Raheem singing with both hands on the mic', caption: 'Lost in the Song' },

@@ -2,7 +2,7 @@
    Social share image — run manually with `npm run og` after changing the poster.
    --------------------------------------------------------------------------
    Builds public/og-image.jpg (1200×630, the size WhatsApp / Instagram /
-   Facebook / X previews expect) from public/hero-poster.jpg + the trimmed logo.
+   Facebook / X previews expect) from public/hero-artist.jpg + the trimmed logo.
    Not part of `npm run build` on purpose: text is rendered with this machine's
    fonts, so the committed image stays identical on every deploy.
    ========================================================================== */
@@ -16,9 +16,9 @@ const PUBLIC = path.join(ROOT, 'public');
 const W = 1200, H = 630;
 const PHOTO_W = 520; // photo panel on the right
 
-const poster = path.join(PUBLIC, 'hero-poster.jpg');
+const poster = path.join(PUBLIC, 'hero-artist.jpg');
 const logo = path.join(PUBLIC, 'img', 'logo.png'); // trimmed logo from optimize-images.js
-if (!fs.existsSync(poster)) throw new Error('public/hero-poster.jpg not found');
+if (!fs.existsSync(poster)) throw new Error('public/hero-artist.jpg not found');
 
 const photo = await sharp(poster).resize(PHOTO_W, H, { fit: 'cover', position: 'attention' }).toBuffer();
 const logoBuf = fs.existsSync(logo) ? await sharp(logo).resize({ width: 150 }).toBuffer() : null;

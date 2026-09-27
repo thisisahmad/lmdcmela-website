@@ -28,18 +28,18 @@ export function runLoader({ skip, isMobile, onExit }) {
   setTimeout(() => {
     loader.classList.add('is-ignited');
     emberBurst($('#loaderBurst'), { isMobile });
-  }, 350);
+  }, 200);
 
-  // Leave after 0.9 s if the page has loaded, and never later than 1.2 s (+0.6 s slide < 2 s)
+  // Leave after 0.6 s if the page has loaded, and never later than 0.9 s (+0.45 s slide)
   const tryExit = () => {
     const t = performance.now() - start;
-    if ((loaded && t > 900) || t > 1200) {
+    if ((loaded && t > 600) || t > 900) {
       loader.classList.add('is-out');
       done();
       setTimeout(() => loader.remove(), 700);
     } else setTimeout(tryExit, 50);
   };
-  setTimeout(tryExit, 900);
+  setTimeout(tryExit, 600);
 }
 
 /* ---------- Split HASAN into letters for the intro ---------- */

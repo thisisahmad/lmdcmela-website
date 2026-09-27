@@ -19,21 +19,16 @@ export function initSmoothScroll() {
   return lenis;
 }
 
-/** Hero entrance — played when the loader leaves. Large elements never start at opacity 0 (keeps LCP early). */
+/** Hero entrance — short and light (~1 s). Large text never starts at opacity 0 (keeps LCP early). */
 export function buildHeroIntro() {
-  return gsap.timeline({ paused: true, defaults: { ease: 'power4.out' } })
-    .from('.hero__photo img', { scale: 1.12, xPercent: 4, duration: 1.8, ease: 'power3.out' }, 0)
-    .from('.hero__logo', { y: -50, scale: 0.6, duration: 1.2 }, 0)
-    .from('.hero__eyebrow', { y: 16, opacity: 0, duration: 0.7 }, '-=0.9')
-    .from('.hero__hasan > span[aria-hidden]', {
-      yPercent: 60, rotateX: -75, duration: 1.1, stagger: 0.06,
-      transformOrigin: '50% 100%', transformPerspective: 600,
-    }, '-=0.8')
-    .from('.hero__raheem', { scaleX: 0.6, filter: 'blur(10px)', duration: 1.2, ease: 'expo.out', clearProps: 'filter' }, '-=0.9')
-    .from('.player', { y: 30, opacity: 0, duration: 0.9 }, '-=1')
-    .from('.hero__meta', { y: 16, opacity: 0, duration: 0.7 }, '-=0.7')
-    .from('.hero__cta', { y: 16, scale: 0.92, opacity: 0, duration: 0.7 }, '-=0.55')
-    .from('.hero__scroll', { opacity: 0, duration: 0.7 }, '-=0.4');
+  return gsap.timeline({ paused: true, defaults: { ease: 'power3.out', duration: 0.7 } })
+    .from('.hero__photo img', { xPercent: 3, scale: 1.04, duration: 1 }, 0)
+    .from('.hero__logo', { y: -18 }, 0)
+    .from('.hero__eyebrow', { y: 12, opacity: 0 }, 0.05)
+    .from('.hero__hasan > span[aria-hidden]', { yPercent: 22, stagger: 0.03, duration: 0.6 }, 0.05)
+    .from('.hero__raheem', { yPercent: 22, duration: 0.6 }, 0.12)
+    .from(['.player', '.hero__meta', '.hero__cta'], { y: 14, opacity: 0, stagger: 0.06, duration: 0.6 }, 0.18)
+    .from('.hero__scroll', { opacity: 0, duration: 0.5 }, 0.45);
 }
 
 export function initScrollAnimations() {

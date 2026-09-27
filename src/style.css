@@ -220,10 +220,10 @@ ul { list-style: none; padding: 0; }
 /* Shown only when JS is running; the failsafe animation hides it even if the script breaks */
 .js:not(.skip-loader) .loader {
   position: fixed; inset: 0; z-index: 10000;
-  animation: loaderFailsafe 0.5s ease 2.6s forwards;
+  animation: loaderFailsafe 0.4s ease 1.8s forwards;
   display: grid; place-items: center; align-content: center; gap: 1.5rem;
   background: #000;
-  transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1);
+  transition: transform 0.45s cubic-bezier(0.76, 0, 0.24, 1);
 }
 .loader__burst { position: absolute; inset: 0; width: 100%; height: 100%; }
 .loader__glow {
@@ -249,7 +249,7 @@ ul { list-style: none; padding: 0; }
 .loader__text span:nth-child(3) { animation-delay: 0.4s; }
 @keyframes dot { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
 
-.js:not(.skip-loader) .loader__logo { animation: loaderIn 0.6s var(--ease) forwards; } /* pure CSS: paints at first frame */
+.js:not(.skip-loader) .loader__logo { animation: loaderIn 0.4s var(--ease) forwards; } /* pure CSS: paints at first frame */
 @keyframes loaderIn { from { opacity: 0.2; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
 .loader.is-in .loader__text { opacity: 1; }
 .loader.is-ignited .loader__glow { opacity: 1; transform: scale(1); animation: pulse 1.2s ease-in-out infinite alternate; }
@@ -302,7 +302,7 @@ ul { list-style: none; padding: 0; }
 }
 .nav__links a:hover, .nav__links a.is-active { color: var(--text); }
 .nav__links a:hover::after, .nav__links a.is-active::after { transform: scaleX(1); }
-.nav__cta { display: none; }
+.nav__cta { display: none; flex-shrink: 0; }
 
 .nav__burger { width: 44px; height: 44px; display: grid; place-content: center; gap: 6px; }
 .nav__burger span { display: block; width: 24px; height: 2px; border-radius: 2px; background: var(--text); transition: transform 0.4s var(--ease), opacity 0.3s; }
@@ -360,12 +360,12 @@ ul { list-style: none; padding: 0; }
 /* Artist photo — phones: faded backdrop behind the text; desktop: right-hand column */
 .hero__photo {
   position: absolute; inset: 0 0 auto; height: 82%; z-index: 0;
-  opacity: 0.4;
+  opacity: 0.32;
   -webkit-mask-image: linear-gradient(180deg, #000 35%, transparent 100%);
   mask-image: linear-gradient(180deg, #000 35%, transparent 100%);
   pointer-events: none;
 }
-.hero__photo img { width: 100%; height: 100%; object-fit: cover; object-position: 72% 30%; will-change: transform; }
+.hero__photo img { width: 100%; height: 100%; object-fit: cover; object-position: 45% 12%; will-change: transform; }
 .hero__photo::after { /* warm stage wash over the photo */
   content: ""; position: absolute; inset: 0;
   background: radial-gradient(60% 50% at 70% 40%, rgba(255, 107, 26, 0.18), transparent 70%);
@@ -417,13 +417,16 @@ ul { list-style: none; padding: 0; }
   letter-spacing: 0.45em; text-transform: uppercase; color: var(--muted);
   margin-bottom: 0.6rem;
 }
-.hero__title { display: flex; flex-direction: column; align-items: center; line-height: 1; }
+.hero__title {
+  --title-size: clamp(3.1rem, 17.5vw, 6rem); /* HASAN and RAHEEM share one size */
+  display: flex; flex-direction: column; align-items: center; line-height: 1;
+}
 .hero__hasan {
   display: flex;
   background: var(--fire-grad);
   -webkit-background-clip: text; background-clip: text; color: transparent;
   filter: drop-shadow(0 0 22px rgba(255, 107, 26, 0.45)) drop-shadow(0 4px 0 rgba(120, 25, 0, 0.55));
-  font: 400 clamp(4rem, 21vw, 14.5rem)/0.9 var(--f-artist);
+  font: 400 var(--title-size)/0.92 var(--f-artist);
   text-transform: uppercase;
   letter-spacing: 0.01em;
 }
@@ -433,21 +436,20 @@ ul { list-style: none; padding: 0; }
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 .hero__hasan.is-split { background: none; }
-.hero__raheem {
+.hero__raheem { /* same font & size as HASAN, outlined so the two lines read apart */
   display: block;
-  margin-top: 0.35em;
-  padding-left: 0.7em; /* balances trailing letter-spacing */
-  font: 400 clamp(1.3rem, 6.5vw, 3.2rem)/1 var(--f-thin);
-  letter-spacing: 0.7em; text-transform: uppercase;
-  color: var(--orange);
-  text-shadow: 0 0 24px rgba(255, 107, 26, 0.6);
+  font: 400 var(--title-size)/0.92 var(--f-artist);
+  letter-spacing: 0.01em; text-transform: uppercase;
+  color: transparent;
+  -webkit-text-stroke: 2px var(--orange);
+  filter: drop-shadow(0 0 18px rgba(255, 107, 26, 0.55));
 }
 
 /* Music player */
 .player {
   display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 0.6rem 0.9rem;
   width: min(100%, 420px);
-  margin: clamp(1.6rem, 5vw, 2.4rem) auto 1.4rem;
+  margin: clamp(1.3rem, 4vw, 1.9rem) auto 1.2rem;
   padding: 0.75rem 0.9rem;
   border-radius: 18px;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.07), rgba(255, 107, 26, 0.05));
@@ -457,7 +459,7 @@ ul { list-style: none; padding: 0; }
   text-align: left;
 }
 .player__art { width: 52px; height: 52px; border-radius: 10px; overflow: hidden; box-shadow: 0 0 0 1px rgba(255, 166, 48, 0.3); }
-.player__art img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; }
+.player__art img { width: 100%; height: 100%; object-fit: cover; object-position: 60% 38%; }
 .player__meta { margin: 0; display: flex; flex-direction: column; line-height: 1.25; min-width: 0; }
 .player__track { font: 700 0.95rem/1.2 var(--f-display); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .player__artist { font-size: 0.72rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -916,22 +918,25 @@ ul { list-style: none; padding: 0; }
   .nav__burger, .menu { display: none; }
 
   /* Hero: text left, photo right */
-  .hero { place-items: center start; padding-left: max(var(--gutter), calc((100vw - var(--max)) / 2)); }
-  .hero__content { align-items: flex-start; text-align: left; max-width: min(640px, 54vw); }
-  .hero__logo { width: clamp(150px, 14vw, 210px); }
-  .hero__title { align-items: flex-start; }
-  .hero__hasan { font-size: clamp(5rem, 10.5vw, 10.5rem); }
-  .hero__raheem { padding-left: 0.08em; font-size: clamp(1.6rem, 3.2vw, 3rem); }
+  .hero {
+    place-items: center start;
+    padding: calc(var(--nav-h) + 1rem) var(--gutter) 4.5rem max(var(--gutter), calc((100vw - var(--max)) / 2));
+  }
+  .hero__content { align-items: flex-start; text-align: left; max-width: min(620px, 50vw); }
+  .hero__logo { width: clamp(120px, 10vw, 160px); }
+  .hero__title { align-items: flex-start; --title-size: clamp(3.6rem, 7.6vw, 8.4rem); }
   .player { margin-left: 0; margin-right: 0; }
   .hero__meta { justify-content: flex-start; }
+  /* Whole photo, sized to the hero's height and anchored bottom-right (nothing cropped) */
   .hero__photo {
-    inset: 0 0 0 auto; width: 52%; height: 100%; opacity: 1;
-    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 38%), linear-gradient(0deg, transparent 0%, #000 22%);
+    inset: var(--nav-h) 0 0 auto; width: auto; height: auto;
+    aspect-ratio: 4 / 5; max-width: 50%; opacity: 1;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 28%), linear-gradient(0deg, transparent 0%, #000 14%, #000 88%, transparent 100%);
     -webkit-mask-composite: source-in;
-    mask-image: linear-gradient(90deg, transparent 0%, #000 38%), linear-gradient(0deg, transparent 0%, #000 22%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 28%), linear-gradient(0deg, transparent 0%, #000 14%, #000 88%, transparent 100%);
     mask-composite: intersect;
   }
-  .hero__photo img { object-position: 62% 28%; }
+  .hero__photo img { object-fit: contain; object-position: right bottom; }
 
   .headliner__grid { grid-template-columns: 1fr 1.1fr; }
   .headliner__media { max-width: none; }
@@ -962,6 +967,13 @@ ul { list-style: none; padding: 0; }
   }
   .ticket__admit { writing-mode: vertical-rl; transform: rotate(180deg); position: absolute; left: 1.6rem; top: 50%; translate: 0 -50%; padding: 0; }
   .ticket__stub { padding-left: 3.4rem; }
+}
+
+/* Medium screens: keep the navbar on one line */
+@media (min-width: 900px) and (max-width: 1150px) {
+  .nav__links { gap: 0.95rem; }
+  .nav__links a { font-size: 0.72rem; letter-spacing: 0.05em; }
+  .nav__cta { padding: 0.75em 1.1em; }
 }
 
 /* ==========================================================================
