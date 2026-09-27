@@ -2,19 +2,19 @@
   "logo": {
     "width": 1205,
     "height": 832,
-    "fallback": "/img/logo.png",
+    "fallback": "/img/logo.dfedcc85.png",
     "variants": [
       {
         "w": 128,
-        "file": "/img/logo-128.webp"
+        "file": "/img/logo-128.dfedcc85.webp"
       },
       {
         "w": 256,
-        "file": "/img/logo-256.webp"
+        "file": "/img/logo-256.dfedcc85.webp"
       },
       {
         "w": 512,
-        "file": "/img/logo-512.webp"
+        "file": "/img/logo-512.dfedcc85.webp"
       }
     ]
   },
@@ -25,19 +25,19 @@
     "variants": [
       {
         "w": 480,
-        "file": "/img/hero-poster-480.webp"
+        "file": "/img/hero-poster-480.b5609360.webp"
       },
       {
         "w": 768,
-        "file": "/img/hero-poster-768.webp"
+        "file": "/img/hero-poster-768.b5609360.webp"
       },
       {
         "w": 1080,
-        "file": "/img/hero-poster-1080.webp"
+        "file": "/img/hero-poster-1080.b5609360.webp"
       },
       {
         "w": 1440,
-        "file": "/img/hero-poster-1440.webp"
+        "file": "/img/hero-poster-1440.b5609360.webp"
       }
     ]
   },
@@ -48,15 +48,15 @@
     "variants": [
       {
         "w": 480,
-        "file": "/img/hero-artist-480.webp"
+        "file": "/img/hero-artist-480.5e3d01f0.webp"
       },
       {
         "w": 800,
-        "file": "/img/hero-artist-800.webp"
+        "file": "/img/hero-artist-800.5e3d01f0.webp"
       },
       {
         "w": 1200,
-        "file": "/img/hero-artist-1200.webp"
+        "file": "/img/hero-artist-1200.5e3d01f0.webp"
       }
     ]
   }

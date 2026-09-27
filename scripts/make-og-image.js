@@ -17,7 +17,9 @@ const W = 1200, H = 630;
 const PHOTO_W = 520; // photo panel on the right
 
 const poster = path.join(PUBLIC, 'hero-artist.jpg');
-const logo = path.join(PUBLIC, 'img', 'logo.png'); // trimmed logo from optimize-images.js
+// trimmed logo from optimize-images.js (fingerprinted name, read from the manifest)
+const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, 'src', 'generated', 'images.json'), 'utf8'));
+const logo = path.join(PUBLIC, (manifest.logo?.fallback || '/img/logo.png').replace(/^\//, ''));
 if (!fs.existsSync(poster)) throw new Error('public/hero-artist.jpg not found');
 
 const photo = await sharp(poster).resize(PHOTO_W, H, { fit: 'cover', position: 'attention' }).toBuffer();

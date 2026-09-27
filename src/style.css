@@ -927,16 +927,20 @@ ul { list-style: none; padding: 0; }
   .hero__title { align-items: flex-start; --title-size: clamp(3.6rem, 7.6vw, 8.4rem); }
   .player { margin-left: 0; margin-right: 0; }
   .hero__meta { justify-content: flex-start; }
-  /* Whole photo, sized to the hero's height and anchored bottom-right (nothing cropped) */
+  /* Whole photo, sized to the hero's height and anchored bottom-right (nothing cropped).
+     The fade sits on the image itself, so its edges stay soft whatever its shape. */
   .hero__photo {
-    inset: var(--nav-h) 0 0 auto; width: auto; height: auto;
-    aspect-ratio: 4 / 5; max-width: 50%; opacity: 1;
-    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 28%), linear-gradient(0deg, transparent 0%, #000 14%, #000 88%, transparent 100%);
+    inset: var(--nav-h) 0 0 auto; width: 52%; height: auto; opacity: 1;
+    display: flex; justify-content: flex-end; align-items: flex-end;
+    -webkit-mask-image: none; mask-image: none;
+  }
+  .hero__photo img {
+    width: auto; height: auto; max-width: 100%; max-height: 100%; /* keeps the photo's own proportions */
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 32%), linear-gradient(0deg, transparent 0%, #000 16%, #000 90%, transparent 100%);
     -webkit-mask-composite: source-in;
-    mask-image: linear-gradient(90deg, transparent 0%, #000 28%), linear-gradient(0deg, transparent 0%, #000 14%, #000 88%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 32%), linear-gradient(0deg, transparent 0%, #000 16%, #000 90%, transparent 100%);
     mask-composite: intersect;
   }
-  .hero__photo img { object-fit: contain; object-position: right bottom; }
 
   .headliner__grid { grid-template-columns: 1fr 1.1fr; }
   .headliner__media { max-width: none; }
