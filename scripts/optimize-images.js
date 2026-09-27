@@ -1,7 +1,7 @@
 /* ==========================================================================
    Image optimizer — run with `npm run images` (also runs before every build)
    --------------------------------------------------------------------------
-   Reads  public/logo.png and public/hero-poster.png, and writes:
+   Reads  public/logo.png and public/hero-poster.jpg, and writes:
      public/img/logo-*.webp, public/img/hero-poster-*.webp   (responsive sizes)
      public/favicon.ico (16/32/48), public/apple-touch-icon.png (180),
      public/icon-192.png, public/icon-512.png
@@ -21,7 +21,7 @@ const MANIFEST = path.join(ROOT, 'src', 'generated', 'images.json');
 const SOURCES = {
   // `trim`: crop the empty black border so the phoenix fills its box (the file itself is untouched)
   logo: { file: 'logo.png', widths: [128, 256, 512], quality: 82, trim: true },
-  poster: { file: 'hero-poster.png', widths: [480, 768, 1080, 1440], quality: 78 },
+  poster: { file: 'hero-poster.jpg', widths: [480, 768, 1080, 1440], quality: 78 },
 };
 
 const force = process.argv.includes('--force');
@@ -61,7 +61,7 @@ async function main() {
       console.warn(`⚠  ${cfg.file} not found in /public — skipping (plain <img> fallback will be used).`);
       continue;
     }
-    const base = path.basename(cfg.file, '.png');
+    const base = path.basename(cfg.file, path.extname(cfg.file));
     // Work from a normalised copy: trimmed (logo) and always a real PNG, whatever the source format
     let input = src;
     let fallback = `/${cfg.file}`;

@@ -2,13 +2,14 @@
   "name": "lmdc-mela",
   "private": true,
   "version": "1.0.0",
-  "description": "LMDC Mela 2026 — Hasan Raheem live in Lahore. Official event website (lmdcmela.com).",
+  "description": "LMDC Mela 2026 \u2014 Hasan Raheem live in Lahore. Official event website (lmdcmela.com).",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "images": "node scripts/optimize-images.js",
     "build": "node scripts/optimize-images.js && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "og": "node scripts/make-og-image.js"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",

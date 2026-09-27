@@ -105,7 +105,7 @@ const BLOCKS = {
     endDate: c.event.endISO,
     eventStatus: 'https://schema.org/EventScheduled',
     eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-    image: [`${c.site.url}/hero-poster.png`],
+    image: [`${c.site.url}/og-image.jpg`, `${c.site.url}/hero-poster.jpg`],
     url: c.site.url,
     location: {
       '@type': 'Place',

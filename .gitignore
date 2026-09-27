@@ -7,3 +7,11 @@ dist
 *.log
 .DS_Store
 Thumbs.db
+
+# Audio files: never commit songs to this public repo (see src/config.js playerTracks)
+public/audio/*.mp3
+public/audio/*.wav
+public/audio/*.m4a
+public/audio/*.aac
+public/audio/*.ogg
+public/audio/*.flac

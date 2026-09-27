@@ -111,12 +111,12 @@ const config = {
   // Put photos in /public/images/gallery/ (portrait ~800×1000, JPG/WebP, < 250 KB).
   // Tip: when replacing a photo, give it a NEW file name — images are cached for a year.
   gallery: [
-    { src: '/images/gallery/gallery-1.svg', alt: 'Crowd at LMDC Mela', caption: 'Crowd Energy' },
-    { src: '/images/gallery/gallery-2.svg', alt: 'The main stage', caption: 'Main Stage' },
-    { src: '/images/gallery/gallery-3.svg', alt: 'Food Street stalls', caption: 'Food Street' },
-    { src: '/images/gallery/gallery-4.svg', alt: 'Gaming Zone', caption: 'Gaming Zone' },
-    { src: '/images/gallery/gallery-5.svg', alt: 'Pop-Up Market', caption: 'Pop-Up Market' },
-    { src: '/images/gallery/gallery-6.svg', alt: 'Stadium at night', caption: 'Night Lights' },
+    { src: '/images/gallery/hasan-raheem-live.webp', alt: 'Hasan Raheem singing live on stage', caption: 'Live on Stage' },
+    { src: '/images/gallery/hasan-raheem-red.webp', alt: 'Hasan Raheem seated on a wooden chair against a red backdrop', caption: 'Hasan Raheem' },
+    { src: '/images/gallery/hasan-raheem-studio.webp', alt: 'Hasan Raheem in profile wearing a black and cream leather jacket', caption: 'The Headliner' },
+    { src: '/images/gallery/gallery-3.svg', alt: 'Food Street — photos coming soon', caption: 'Food Street' },
+    { src: '/images/gallery/gallery-4.svg', alt: 'Gaming Zone — photos coming soon', caption: 'Gaming Zone' },
+    { src: '/images/gallery/gallery-5.svg', alt: 'Pop-Up Market — photos coming soon', caption: 'Pop-Up Market' },
   ],
 
   marquee: 'LMDC MELA • HASAN RAHEEM • 18 OCT 2026 • KHAYABAN-E-AMIN •',

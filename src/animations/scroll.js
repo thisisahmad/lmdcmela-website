@@ -77,6 +77,7 @@ export function initGallery() {
   const section = document.getElementById('gallery');
   const track = document.getElementById('galleryTrack');
   if (!section || !track) return;
+  if (track.scrollWidth <= innerWidth) return; // everything already fits — no need to pin
   section.classList.add('is-pinned');
   const distance = () => Math.max(0, track.scrollWidth - innerWidth);
   gsap.to(track, {

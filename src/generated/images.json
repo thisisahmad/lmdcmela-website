@@ -19,9 +19,9 @@
     ]
   },
   "poster": {
-    "width": 1440,
-    "height": 1800,
-    "fallback": "/hero-poster.png",
+    "width": 1600,
+    "height": 2000,
+    "fallback": "/hero-poster.jpg",
     "variants": [
       {
         "w": 480,
