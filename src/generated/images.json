@@ -1,0 +1,44 @@
+{
+  "logo": {
+    "width": 1024,
+    "height": 1024,
+    "fallback": "/logo.png",
+    "variants": [
+      {
+        "w": 128,
+        "file": "/img/logo-128.webp"
+      },
+      {
+        "w": 256,
+        "file": "/img/logo-256.webp"
+      },
+      {
+        "w": 512,
+        "file": "/img/logo-512.webp"
+      }
+    ]
+  },
+  "poster": {
+    "width": 1440,
+    "height": 1800,
+    "fallback": "/hero-poster.png",
+    "variants": [
+      {
+        "w": 480,
+        "file": "/img/hero-poster-480.webp"
+      },
+      {
+        "w": 768,
+        "file": "/img/hero-poster-768.webp"
+      },
+      {
+        "w": 1080,
+        "file": "/img/hero-poster-1080.webp"
+      },
+      {
+        "w": 1440,
+        "file": "/img/hero-poster-1440.webp"
+      }
+    ]
+  }
+}

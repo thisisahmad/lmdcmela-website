@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000">
+  <!-- Placeholder: replace with a real photo (gallery-5.jpg) and update the src in index.html -->
+  <defs>
+    <radialGradient id="g" cx="50%" cy="100%" r="90%">
+      <stop offset="0" stop-color="#FF6B1A" stop-opacity="0.85"/>
+      <stop offset="0.45" stop-color="#3a1206" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#0A0A0A"/>
+    </radialGradient>
+    <radialGradient id="e" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#FFE7B0"/><stop offset="0.3" stop-color="#FFA630"/><stop offset="1" stop-color="#FF6B1A" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#g)"/>
+  <g fill="url(#e)">
+    <circle cx="305" cy="780" r="14"/><circle cx="455" cy="640" r="9"/>
+    <circle cx="425" cy="520" r="6"/><circle cx="585" cy="360" r="11"/>
+    <circle cx="265" cy="300" r="5"/><circle cx="465" cy="180" r="7"/>
+  </g>
+  <text x="400" y="490" text-anchor="middle" font-family="Syne, Arial, sans-serif" font-weight="800" font-size="64" fill="#F5F0E8" fill-opacity="0.9" letter-spacing="4">POP-UP MARKET</text>
+  <text x="400" y="545" text-anchor="middle" font-family="Georgia, serif" font-size="24" fill="#FFA630" letter-spacing="10">PHOTO COMING SOON</text>
+</svg>
