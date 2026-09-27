@@ -40,5 +40,24 @@
         "file": "/img/hero-poster-1440.webp"
       }
     ]
+  },
+  "hero": {
+    "width": 1400,
+    "height": 2487,
+    "fallback": "/hero-artist.jpg",
+    "variants": [
+      {
+        "w": 480,
+        "file": "/img/hero-artist-480.webp"
+      },
+      {
+        "w": 800,
+        "file": "/img/hero-artist-800.webp"
+      },
+      {
+        "w": 1200,
+        "file": "/img/hero-artist-1200.webp"
+      }
+    ]
   }
 }

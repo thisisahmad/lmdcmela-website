@@ -22,7 +22,8 @@ export function initSmoothScroll() {
 /** Hero entrance — played when the loader leaves. Large elements never start at opacity 0 (keeps LCP early). */
 export function buildHeroIntro() {
   return gsap.timeline({ paused: true, defaults: { ease: 'power4.out' } })
-    .from('.hero__logo', { y: -50, scale: 0.6, duration: 1.2 })
+    .from('.hero__photo img', { scale: 1.12, xPercent: 4, duration: 1.8, ease: 'power3.out' }, 0)
+    .from('.hero__logo', { y: -50, scale: 0.6, duration: 1.2 }, 0)
     .from('.hero__eyebrow', { y: 16, opacity: 0, duration: 0.7 }, '-=0.9')
     .from('.hero__hasan > span[aria-hidden]', {
       yPercent: 60, rotateX: -75, duration: 1.1, stagger: 0.06,
@@ -63,6 +64,12 @@ export function initScrollAnimations() {
   gsap.fromTo('.poster img', { yPercent: -8 }, {
     yPercent: 0, ease: 'none',
     scrollTrigger: { trigger: '.headliner', start: 'top bottom', end: 'bottom top', scrub: true },
+  });
+
+  // Hero photo drifts slower than the page (depth)
+  gsap.to('.hero__photo img', {
+    yPercent: 10, scale: 1.06, ease: 'none',
+    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true },
   });
 
   // Hero title drifts up and dims as you leave

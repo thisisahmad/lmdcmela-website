@@ -35,12 +35,13 @@ works even with JavaScript disabled. **You don't need to touch `index.html` to c
 | File | Purpose |
 |---|---|
 | `public/logo.png` | Phoenix logo (on black). Source for all favicons and logo WebPs |
+| `public/hero-artist.jpg` | Hasan Raheem photo on the right of the hero (faded backdrop on phones) |
 | `public/hero-poster.jpg` | Hasan Raheem photo used in the Headliner section and mini-player |
 | `public/og-image.jpg` | 1200×630 link-preview image for WhatsApp/Instagram — rebuild with `npm run og` |
 | `public/images/gallery/*` | Gallery photos (portrait ~800×1000, JPG/WebP, < 250 KB each) |
 | `public/images/partners/*` | Partner logos (transparent PNG/SVG, ~260×60) |
 
-After replacing `logo.png` or `hero-poster.jpg`, run `npm run images` (and `npm run og` for the share image) (it also runs
+After replacing `logo.png`, `hero-artist.jpg` or `hero-poster.jpg`, run `npm run images` (and `npm run og` for the share image) (it also runs
 automatically on every build). This regenerates the responsive WebP sizes in `public/img/`
 and `favicon.ico`, `apple-touch-icon.png`, `icon-192.png`, `icon-512.png`.
 
