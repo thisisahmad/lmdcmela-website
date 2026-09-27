@@ -66,6 +66,12 @@ async function loadHeroScene() {
   }
 }
 
+/* ---------- Floating ticket bar: hidden while the hero's own button is visible ---------- */
+const heroCta = $('.hero__cta');
+if (heroCta) {
+  new IntersectionObserver(([en]) => document.body.classList.toggle('fab-hidden', en.isIntersecting)).observe(heroCta);
+}
+
 /* ---------- Boot ---------- */
 splitHeadline();
 const { close: closeMenu } = initNav(lenisRef);

@@ -302,7 +302,8 @@ ul { list-style: none; padding: 0; }
 }
 .nav__links a:hover, .nav__links a.is-active { color: var(--text); }
 .nav__links a:hover::after, .nav__links a.is-active::after { transform: scaleX(1); }
-.nav__cta { display: none; flex-shrink: 0; }
+.nav__cta { display: none; flex-shrink: 0; margin-left: auto; }
+@media (min-width: 600px) { .nav__cta { display: inline-flex; } } /* tablets: ticket button next to the menu */
 
 .nav__burger { width: 44px; height: 44px; display: grid; place-content: center; gap: 6px; }
 .nav__burger span { display: block; width: 24px; height: 2px; border-radius: 2px; background: var(--text); transition: transform 0.4s var(--ease), opacity 0.3s; }
@@ -728,11 +729,11 @@ ul { list-style: none; padding: 0; }
 }
 .ticket__main { padding: 2.4rem 1.6rem 2rem; }
 .ticket__kicker { font: 400 0.75rem/1 var(--f-thin); letter-spacing: 0.35em; text-transform: uppercase; color: var(--amber); margin-bottom: 1rem; }
-.ticket__title { font: 800 clamp(1.55rem, 6vw, 3rem)/1.02 var(--f-display); overflow-wrap: anywhere; text-transform: uppercase; }
+.ticket__title { font: 800 min(3rem, calc((100vw - 90px) / 11.5))/1.02 var(--f-display); /* "TICKETWALA" always fits on one line */ text-transform: uppercase; }
 .ticket__title span { background: var(--fire-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .ticket__sub { margin-top: 0.7rem; font: 400 clamp(1.05rem, 3vw, 1.4rem)/1.3 var(--f-thin); letter-spacing: 0.12em; color: var(--gold); }
 .ticket__details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.1rem 1.4rem; margin-top: 1.8rem; }
-.ticket__details dd { overflow-wrap: anywhere; }
+@media (max-width: 480px) { .ticket__details div:nth-child(2) { grid-column: 1 / -1; order: 3; } } /* venue gets its own row on small phones */
 .ticket__details dt { font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted); }
 .ticket__details dd { margin: 0.25rem 0 0; font: 700 0.9rem/1.2 var(--f-display); }
 .ticket__stub {
@@ -830,20 +831,25 @@ ul { list-style: none; padding: 0; }
 }
 .contact-card h3 { font: 800 1.35rem/1.1 var(--f-display); text-transform: uppercase; }
 .contact-card__role { font: 400 0.75rem/1 var(--f-thin); letter-spacing: 0.3em; text-transform: uppercase; color: var(--amber); margin: 0.5rem 0 0.9rem; }
-.contact-card__num { display: block; font: 600 1.1rem/1.2 var(--f-body); font-variant-numeric: tabular-nums; margin-bottom: 1.3rem; color: var(--text); }
+.contact-card__num { display: inline-block; padding: 0.55rem 0; font: 600 1.1rem/1.2 var(--f-body); font-variant-numeric: tabular-nums; margin-bottom: 0.8rem; color: var(--text); }
 .contact-card__btns { display: flex; flex-wrap: wrap; gap: 0.6rem; }
 .contact-card__btns .btn-fire, .contact-card__btns .btn-ghost { padding: 0.85em 1.3em; font-size: 0.78rem; }
 .contact-card__btns svg { width: 1.2em; height: 1.2em; }
 
 .partners { margin-top: clamp(4rem, 9vw, 6rem); text-align: center; padding-top: 3rem; border-top: 1px solid var(--line); }
 .partners__label { font-weight: 400; font: 400 0.85rem/1 var(--f-thin); letter-spacing: 0.45em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.8rem; }
-.partners__row { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 1.4rem 2.6rem; }
+.partners__row { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 1.1rem 2.6rem; }
+.partners__dot { display: none; } /* phones: names stacked, no separator */
+@media (min-width: 1100px) { /* both names fit side by side from here */
+  .partners__row { flex-direction: row; }
+  .partners__dot { display: block; }
+}
 .partner { transition: transform 0.4s var(--ease), filter 0.4s; }
 .partner:hover { transform: translateY(-3px); filter: drop-shadow(0 0 14px rgba(255, 107, 26, 0.6)); }
 .partner img { height: clamp(40px, 7vw, 56px); width: auto; }
-.partner__name { font: 800 clamp(1.4rem, 5vw, 2.2rem)/1 var(--f-display); text-transform: uppercase; letter-spacing: 0.02em; color: var(--text); }
+.partner__name { white-space: nowrap; font: 800 clamp(1.05rem, 4.6vw, 1.7rem)/1 var(--f-display); text-transform: uppercase; letter-spacing: 0.02em; color: var(--text); }
 .partner__name em { font-style: normal; color: var(--orange); }
-.partners__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--orange); box-shadow: 0 0 12px var(--orange); }
+.partners__dot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--orange); box-shadow: 0 0 12px var(--orange); }
 
 /* ==========================================================================
    11. FOOTER
@@ -861,7 +867,7 @@ ul { list-style: none; padding: 0; }
 
 .footer__inner { display: flex; flex-direction: column; align-items: center; gap: 1.2rem; padding: 3.5rem var(--gutter) 2.5rem; text-align: center; }
 .footer__logo { width: 150px; height: auto; }
-.footer__ig { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; letter-spacing: 0.05em; color: var(--text); transition: color 0.3s; }
+.footer__ig { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 44px; padding: 0 0.5rem; font-weight: 600; letter-spacing: 0.05em; color: var(--text); transition: color 0.3s; }
 .footer__ig:hover { color: var(--orange); }
 .footer__ig svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; }
 .footer__copy { font-size: 0.8rem; color: var(--muted); }
@@ -877,7 +883,7 @@ ul { list-style: none; padding: 0; }
   transition: transform 0.5s var(--ease), opacity 0.5s;
 }
 .fab svg { width: 1.4em; height: 1.4em; }
-.is-loading .fab, .menu-open .fab { transform: translateY(150%); opacity: 0; }
+.is-loading .fab, .menu-open .fab, .fab-hidden .fab { transform: translateY(150%); opacity: 0; }
 
 /* ==========================================================================
    CUSTOM EMBER CURSOR (desktop only — enabled by JS)
@@ -914,8 +920,6 @@ ul { list-style: none; padding: 0; }
   :root { --nav-h: 80px; }
   body { padding-bottom: 0; }
   .fab { display: none; }
-  .nav__links, .nav__cta { display: flex; }
-  .nav__burger, .menu { display: none; }
 
   /* Hero: text left, photo right */
   .hero {
@@ -946,15 +950,13 @@ ul { list-style: none; padding: 0; }
   .headliner__media { max-width: none; }
   .headliner__title { font-size: clamp(3rem, 5.6vw, 5rem); }
 
-  .cards { grid-template-columns: repeat(4, 1fr); }
-  .cards .card:nth-child(even) { margin-top: 2.5rem; }
 
   .info__grid { grid-template-columns: 1fr 1.2fr; gap: 2.4rem; }
   .map { min-height: 100%; }
 
   .ticket {
     --stub: 280px;
-    grid-template-rows: none; grid-template-columns: 1fr var(--stub);
+    grid-template-rows: none; grid-template-columns: minmax(0, 1fr) var(--stub);
     /* Perforation notches (desktop: stub is on the right) */
     -webkit-mask:
       radial-gradient(circle var(--notch) at calc(100% - var(--stub)) 0, #0000 98%, #000) top / 100% 51% no-repeat,
@@ -964,6 +966,7 @@ ul { list-style: none; padding: 0; }
       radial-gradient(circle var(--notch) at calc(100% - var(--stub)) 100%, #0000 98%, #000) bottom / 100% 51% no-repeat;
   }
   .ticket__main { padding: 3.4rem 3rem; }
+  .ticket__title { font-size: min(3rem, calc((100vw - 470px) / 11.5)); } /* leaves room for the stub */
   .ticket__details { grid-template-columns: repeat(3, auto); justify-content: start; }
   .ticket__stub {
     background-image: linear-gradient(0deg, rgba(255, 200, 87, 0.5) 50%, transparent 0);
@@ -973,10 +976,39 @@ ul { list-style: none; padding: 0; }
   .ticket__stub { padding-left: 3.4rem; }
 }
 
-/* Medium screens: keep the navbar on one line */
-@media (min-width: 900px) and (max-width: 1150px) {
-  .nav__links { gap: 0.95rem; }
-  .nav__links a { font-size: 0.72rem; letter-spacing: 0.05em; }
+/* Large monitors: scale hero text and player with the screen */
+@media (min-width: 1600px) {
+  .hero__content { max-width: min(780px, 46vw); }
+  .hero__logo { width: clamp(160px, 9vw, 210px); }
+  .hero__title { --title-size: clamp(8.4rem, 7vw, 11.5rem); }
+  .hero__eyebrow { font-size: 1.05rem; }
+  .player { width: min(100%, 500px); }
+  .hero__meta { font-size: 1rem; }
+  .hero__cta { font-size: 1rem; }
+}
+
+/* 2K / 4K monitors */
+@media (min-width: 2200px) {
+  .hero__content { max-width: min(1000px, 44vw); }
+  .hero__logo { width: 250px; }
+  .hero__title { --title-size: clamp(11.5rem, 7vw, 15rem); }
+  .hero__eyebrow { font-size: 1.3rem; }
+  .player { width: min(100%, 600px); }
+  .hero__meta { font-size: 1.2rem; }
+  .hero__cta { font-size: 1.15rem; }
+}
+
+/* Wide screens: full navbar + four attraction cards in a row */
+@media (min-width: 1100px) {
+  .nav__links, .nav__cta { display: flex; }
+  .nav__burger, .menu { display: none; }
+  .cards { grid-template-columns: repeat(4, 1fr); }
+  .cards .card:nth-child(even) { margin-top: 2.5rem; }
+}
+/* Between 1100 and 1250px: tighten the navbar so it stays on one line */
+@media (min-width: 1100px) and (max-width: 1250px) {
+  .nav__links { gap: 1.1rem; }
+  .nav__links a { font-size: 0.76rem; letter-spacing: 0.05em; }
   .nav__cta { padding: 0.75em 1.1em; }
 }
 

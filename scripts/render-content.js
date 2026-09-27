@@ -85,7 +85,7 @@ const BLOCKS = {
   partners: (c) => c.partners.map((p, i) => `${i ? '<span class="partners__dot" aria-hidden="true"></span>' : ''}
           <div class="partner">${p.logo
             ? `<img src="${attr(p.logo)}" alt="${esc(p.name)}" loading="lazy" decoding="async" width="260" height="60" />`
-            : `<span class="partner__name">${esc(p.name)}</span>`}</div>`).join(''),
+            : `<span class="partner__name">${esc(p.name).replace(/\s(\S+)$/, ' <em>$1</em>')}</span>`}</div>`).join(''),
 
   gallery: (c) => c.gallery.map((g) => `
           <figure class="gallery__item"><img src="${attr(g.src)}" alt="${esc(g.alt)}" loading="lazy" decoding="async" width="800" height="1000" /><figcaption>${esc(g.caption)}</figcaption></figure>`).join(''),
